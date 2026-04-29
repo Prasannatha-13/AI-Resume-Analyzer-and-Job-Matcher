@@ -1,0 +1,55 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+ *{
+  margin:0px;
+  padding:0;
+  box-sizing: border-box;
+} ; 
+/* nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top: 10px;
+}
+.dash{
+    display:flex;
+   gap:80px;
+   font-size: large;
+   
+}
+.both{
+display: flex;
+gap:50px;
+margin-right:50px;
+}
+.Home,.Features, .HowItWorks,.AboutUs{
+    padding-top:20px
+}
+.SignUp{
+   margin-right: 10px;
+   margin-top:10px;
+   font-size: large;   
+   padding:10px; 
+   width:120px;
+   border-radius:15px;
+   background-color: rgb(39, 189, 219);
+ 
+}
+.SignUp:hover{
+    background-color: aqua;
+}
+.LogIn {
+   margin-right: 10px;
+   margin-top:10px;
+   font-size: large;   
+   padding:10px; 
+   width:120px;
+   border-radius:15px;
+ 
+}
+
+nav img{
+    margin-left: 70px;
+} */ 
