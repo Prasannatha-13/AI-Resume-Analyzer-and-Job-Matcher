@@ -9,7 +9,7 @@ function Features(){
     return(
         <>
         <h1 className="text-3xl font-bold text-center m-10 mb-7">Features</h1>
-        <div className="flex justify-center gap-10">
+        <div className="flex justify-center gap-10 m-28">
          <div className="h-46 w-64 border p-4 rounded-xl shadow-2xl shadow-blue-500/100">
                  <div className="flex justify-center"><img src={resume} className="h-14 w-14 "/></div>
                  <p className="text-center m-2 font-bold">Resume Analysis</p>

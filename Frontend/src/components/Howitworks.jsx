@@ -5,9 +5,9 @@ import goal from "/goal.png"
 
 function Howitworks(){
     return(
-        <>
-        <h1 className="text-3xl font-bold text-center m-10 mb-7 ">How It Works</h1>
-        <div className="flex justify-center gap-5 items-center bg-blue-50 h-32 ">
+        <div className="">
+        <h1 className="text-3xl font-bold text-center  ">How It Works</h1>
+        <div className="flex justify-center gap-5 items-center bg-blue-50 h-32 mt-24 m-28">
             <div className="h-28 w-80 flex justify-center rounded-lg p-4 gap-1 ">
                 <button className="border bg-green-400 rounded-full h-6 w-10 text-white font-bold">1</button>
                 <img src={tree} className="h-14 w-14 rounded-full"/>
@@ -43,7 +43,7 @@ function Howitworks(){
                 </div>
             </div>
         </div>
-        </>
+        </div>
     )
 }
 export default Howitworks

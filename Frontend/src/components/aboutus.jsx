@@ -1,19 +1,23 @@
 import React from "react";
+import Home from "./Home";
+import { Link as ScrollLink } from "react-scroll";
 
 function Aboutus(){
     return(
         <>
-        <div className="bg-blue-950 w-full h-38 flex justify-center gap-24">
+        <div className="bg-blue-950 w-full h-48 flex justify-center gap-24 ">
             <div >
               <h1 className="text-2xl text-white m-14">ResuMatch</h1>  
             </div>
             <div>
                 <h1 className="text-lg text-white m-6 mb-3 font-semibold">Quick Links</h1>
                 <div className="flex flex-col ml-7 ">
-                <a href="#Home" className="text-gray-300">Home</a>
-                <a href="#Features" className="text-gray-300" >Features</a>
-                <a href="#Howitworks" className="text-gray-300">How it works</a>
-                <a href="#Aboutus" className="text-gray-300">About us</a>
+                <ScrollLink to="home" smooth={true} duration={500}  offset={-70} className=" text-gray-300 hover:cursor-pointer">Home</ScrollLink>
+                <ScrollLink to="features" smooth={true} duration={500}  offset={-70} className=" text-gray-300 "> Features</ScrollLink>
+                <ScrollLink to="howitworks" smooth={true} duration={500}  offset={-70} className=" text-gray-300 ">How It Works</ScrollLink>
+                <ScrollLink to="results" smooth={true} duration={500}  offset={-70} className=" text-gray-300 ">Results</ScrollLink>
+               
+                        
                 </div>
             </div>
             <div>
