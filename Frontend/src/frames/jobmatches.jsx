@@ -1,7 +1,8 @@
 import React from "react";
+import { useState } from "react";
 
 function Jobmatch({ results }) {
-
+  
   const jobMatch = results?.jobmatch;
   const jobs = results?.jobmatches || [];
 
@@ -14,7 +15,8 @@ function Jobmatch({ results }) {
           Match: {jobMatch?.matchpercentage || 0}%
         </p>
         <p className="mt-2 text-gray-600">
-          {jobMatch?.summary || "No summary available"}
+          {jobMatch ? (jobMatch?.summary || "No summary Available"):("Job Description is empty") }
+         
         </p>
       </div>
 

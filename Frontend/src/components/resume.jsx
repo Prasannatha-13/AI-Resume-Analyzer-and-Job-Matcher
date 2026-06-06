@@ -24,7 +24,7 @@ function Resume({file,setfile,description,setdescription,results,setresults,info
         const formdata = new FormData();
         formdata.append("resume", file);
         formdata.append("email",email);
-        formdata.append('description',description)
+        formdata.append('jobdescription',description)
         console.log("file uploaded")
         console.log(formdata)
     

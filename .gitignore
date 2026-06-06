@@ -1,4 +1,8 @@
 node_modules/
 Backend/node_modules/
 Backend/uploads/
+Backend/.env
 .env
+.log
+build/
+dist/

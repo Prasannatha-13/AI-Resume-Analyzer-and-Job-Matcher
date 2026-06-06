@@ -111,7 +111,7 @@ app.post('/upload', upload.single("resume"), async (req,res)=>{
          resume:req.file.filename ,
          description:req.body.description
         },
-         { returnDocument: 'after' }
+         { returnDocument: 'after'}
      )
 
      res.json({msg:"Resume Uploaded & saved to DB"})
@@ -128,12 +128,16 @@ app.post('/analyze',upload.single("resume"), async (req,res)=>{
       try{
 
         console.log("FILE:", req.file);
+       
         const email=req.body.email
         const filepath=req.file.path;
         const databuffer=fs.readFileSync(filepath);
         const pdfData= await pdfParse(databuffer);
         const text = pdfData.text.slice(0, 4000);
         const jobdescription=req.body.jobdescription;
+        console.log(email)
+        console.log(filepath)
+        console.log(jobdescription)
 
         const data = await openai.chat.completions.create({
           model: "llama-3.3-70b-versatile",
@@ -146,6 +150,7 @@ app.post('/analyze',upload.single("resume"), async (req,res)=>{
            Do NOT include explanation.
            Do NOT include markdown (no \`\`\`).
            here's the Job description by an user:${jobdescription}
+           if the jobdescription string is null then do not reurn anything in jobmatch
            mention some jobs matches(2-3) according to resume rather than job description
 
         {
@@ -159,9 +164,9 @@ app.post('/analyze',upload.single("resume"), async (req,res)=>{
             "matchedskills": [],
             "missingskills": [],
             "summary": ""
-         }
+         },
           "jobmatches":{
-          "jobtittle":"",
+          "jobtitle":"",
           "company":"",
           "matchpercentage":number(1-100)
           }
@@ -257,12 +262,12 @@ app.post("/profilepic", upload.single("profilePic"), async (req, res) => {
     res.status(500).json({ msg: "Error uploading image" });
   }
 });
-app.put('/newinfo',async (req,res)=>{
+app.put('/newinfo', upload.single("newfile"),async (req,res)=>{
   const email=req.body.email
 
    let hashedPw = req.body.newpw;
    console.log(hashedPw)
-
+  
     if (hashedPw) {
       hashedPw = await bcrypt.hash(hashedPw, 10);
     }
@@ -276,6 +281,8 @@ app.put('/newinfo',async (req,res)=>{
       {
         username:req.body.newname,
         email:req.body.newemail,
+        resume:req.newfile.filename,
+        description:req.body.newdescription,
         password:hashedPw
       },
       {returnDocument:'after'}
@@ -333,6 +340,9 @@ app.post("/refreshdata", async (req, res) => {
   try {
     const { email } = req.body;
 
+    if(!email){
+      res.json({msg:"user not logged in"})
+    }
     const user = await UserModel.findOne({ email });
 
     if (!user) {

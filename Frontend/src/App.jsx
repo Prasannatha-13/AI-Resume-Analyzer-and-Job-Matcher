@@ -35,7 +35,8 @@ function App() {
       const fetchProfile = async () => {
         try {
           const email = localStorage.getItem("email");
-    
+
+          if(email){
           const res = await fetch("http://localhost:3000/refreshdata", {
             method: "POST",
             headers: {
@@ -45,9 +46,11 @@ function App() {
           });
     
           const data = await res.json();
+          
     
           setinfo(data);
           setresults(data.results)
+        }
         } catch (err) {
           console.error(err);
         }
@@ -55,6 +58,8 @@ function App() {
     
       fetchProfile();
     }, []);
+
+
   
   useEffect(() => {
     if (location.state?.scrollTo) {
@@ -64,11 +69,16 @@ function App() {
       }
     }
   }, [location]);
+
+  
   return (
     <>
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
 
-     <Navbar />
+     <Navbar info={info} results={results} />
+
+    
+  
 
       <Routes>
        
@@ -98,8 +108,8 @@ function App() {
             </>
             }
         />
-
-       
+        
+        
         <Route path="/signup" element={<Signup formData={formData} setFormData={setFormData} />} />
         <Route path="/login" element={<Login  />} />
         <Route path='/resume' element={<Resume file={file} setfile={setfile} description={description} setdescription={setdescription}  results={results} setresults={setresults} info={info} setinfo={setinfo} formData={formData}/>}/>
@@ -109,7 +119,7 @@ function App() {
             <Route path="resumeanalysis" element={<ResumeAnalysis results={results} />} />
             <Route path="skills" element={<Skills results={results} />} />
             <Route path="jobmatches" element={<Jobmatch results={results}/>} />
-            <Route path="profile" element={<Profile results={results} setresults={setresults} info={info} setinfo={setinfo} formData={formData} setFormData={setFormData} />} />
+            <Route path="profile" element={<Profile file={file} setfile={setfile} results={results} setresults={setresults} info={info} setinfo={setinfo} formData={formData} setFormData={setFormData} />} />
         </Route>
       </Routes>
       </ErrorBoundary>

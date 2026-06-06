@@ -7,7 +7,7 @@ import resumeimg from '/blurred_resume.png'
 
 
 
-function Profile({results,setresults,info,setinfo,formData,setFormData}) {
+function Profile({ file,setfile,results,setresults,info,setinfo,formData,setFormData}) {
 
   const [profilePic, setProfilePic] = useState(null);
   const [imagefile,setimagefile]=useState(null)
@@ -49,6 +49,8 @@ useEffect(() => {
   const [newall,setnewall]=useState({
      newname:"",
      newemail:"",
+     newdescription:"",
+     newfile:"",
      newpw:""
   })
   
@@ -84,14 +86,10 @@ useEffect(() => {
 
   const data = await res.json();
 
-  setinfo({
-      ...info,
-      profilePic: data.profilePic,
-    });
-  //   if(data.profilePic){
-         
-  // setProfilePic(`http://localhost:3000/uploads/${data.profilePic}`);
-  //   }
+ setinfo(prev => ({
+   ...prev,
+   profilePic: data.profilePic
+}));
 }
 
 async function About(){
@@ -124,46 +122,50 @@ async function About(){
         console.error(err);
      }
 }
+ async function handleSave() {
+  const description = newall.newdescription;
+  const selectedFile = newall.newfile;
 
+  await newinfo();
+
+  await newanalyze(description, selectedFile);
+
+  setOpenEdit(false);
+}
  async function newinfo() {
   try {
 
-    let updated = { ...newall };
+     const fd = new FormData();
 
-    if (!updated.newname){
-      updated.newname = info.username;
+    fd.append("email", email);
+    fd.append("newname", newall.newname || info.username);
+    fd.append("newemail", newall.newemail || info.email);
+    fd.append("newdescription", newall.newdescription || "");
+    fd.append("newpw", newall.newpw || "");
+
+    
+    if (newall.newfile) {
+      fd.append("newfile", newall.newfile);
+    }else{
+      fd.append("newfile",file);
     }
 
-    if (!updated.newemail) {
-      updated.newemail = info.email;
-    }
-    if(updated.newpw){
-     if(msg!=="Password Matched"){
+    const res = await fetch("http://localhost:3000/newinfo", {
+      method: "PUT",
+      body: fd,
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Backend Error:", errText);
       return;
     }
-  }
-    
-    let res=await fetch("http://localhost:3000/newinfo",{
-      method:"PUT",
-      headers:{
-         "Content-Type": "application/json",
-       },
-      body:JSON.stringify({
-        email:email,
-        newname:updated.newname,
-        newemail:updated.newemail,
-        newpw:updated.newpw || ""
-      })
 
-    })
-    const newdata= await res.json()
-    console.log(newdata)
-     setnewall({
-      newname: newdata.username,
-      newemail: newdata.email,
-      newpw:newdata.password
-    });
+    const newdata = await res.json();
+    console.log("UPDATED:", newdata);
+
     localStorage.setItem("email", newdata.email);
+    console.log(newall.newdescription)
     setn(newdata.username)
     setem(newdata.email)
     setinfo(newdata)
@@ -172,6 +174,43 @@ async function About(){
         console.error(err)
    }
  }
+
+
+  
+async function newanalyze(description,selectedFile){
+      console.log(description)
+      if(!selectedFile){
+        selectedFile=file;
+      }
+      if(!newall.newemail){
+         newall.newemail=email
+      }
+      console.log(selectedFile)
+      console.log(newall.newemail)
+      
+      if(!description || !selectedFile) return;
+      console.log("entered")
+       const formd=new FormData();
+      formd.append("resume",selectedFile);
+      formd.append("email",newall.newemail);
+      formd.append('jobdescription',description)
+
+       try{
+            let res= await fetch('http://localhost:3000/analyze',{
+                method:'POST',
+                body:formd
+            });
+            console.log("analyzed")
+            let data=await res.json();
+            console.log(data.results)
+            setinfo(data);
+            setresults(data.results);
+            
+        }catch(err){
+            console.error(err);
+        }
+  }
+
  async function logout(){
  
   try{
@@ -309,6 +348,16 @@ async function About(){
             className="w-full border-2 p-2 rounded-lg
                 mb-4"
             />
+            <p  className="md-2 ml-2 font-semibold" >Resume</p>
+            <span><input type="file" accept=".pdf" onChange={handleChange} className='border border-gray-500 h-b8 w-54 rounded-md mb-4'/></span>
+            <p className="md-2 ml-2 font-semibold">Job Description</p>
+            <input 
+            type="text" 
+            name="newdescription" 
+            value={newall.newdescription} 
+            onChange={handleChange} 
+             className="w-full border-2 p-2 rounded-lg
+                mb-4"/>
             <p className="md-2 ml-2 font-semibold">Current Password</p>
           <div className="relative">
             <input
@@ -343,10 +392,7 @@ async function About(){
                 bg-blue-500 text-white
                 px-4 py-2 rounded-lg
               "
-              onClick={()=>{
-                newinfo()
-                setOpenEdit(false)
-              }}
+              onClick={handleSave}
             >
               Save
             </button>
